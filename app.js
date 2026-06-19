@@ -55,30 +55,24 @@ function mouth(){
 }
 
 /* ---------------- DAVE BRAIN ---------------- */
+async function vraagAI(vraag){
 
-function brain(text){
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer JOUW_API_KEY_HIER"
+        },
+        body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+                { role: "system", content: "Je bent LEGO Dave, een grappige robot." },
+                { role: "user", content: vraag }
+            ]
+        })
+    });
 
-    text = text.toLowerCase();
-
-    if(text.includes("hallo")){
-        return "Hoi! Ik ben LEGO Dave 😄";
-    }
-
-    if(text.includes("grap")){
-        return "Waarom valt een robot nooit? Omdat hij altijd goed gebalanceerd is 😂";
-    }
-
-    if(text.includes("naam")){
-        return "Ik ben Dave, jouw LEGO AI robot 🤖";
-    }
-
-    if(text.includes("hoe gaat")){
-        return "Alles werkt perfect in mijn servo-systeem 😎";
-    }
-
-    return "Hmm 🤔 dat vind ik interessant!";
-}
-
+    const data =
 /* ---------------- SPEAK ---------------- */
 
 function speak(text){
