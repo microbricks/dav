@@ -1,10 +1,9 @@
 let tx;
 
-function log(text, type="bot"){
-    let div = document.createElement("div");
-    div.className = "msg " + type;
-    div.innerHTML = text;
-    chat.appendChild(div);
+/* ---------------- CHAT ---------------- */
+
+function log(t){
+    chat.innerHTML += t + "<br>";
     chat.scrollTop = chat.scrollHeight;
 }
 
@@ -30,10 +29,10 @@ async function connect(){
             "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
         );
 
-        log("✅ Verbonden met micro:bit 🤖");
+        log("✅ Dave AI verbonden met micro:bit");
 
     }catch(e){
-        log("❌ Bluetooth fout: " + e, "user");
+        log("❌ Bluetooth fout: " + e);
     }
 }
 
@@ -45,39 +44,20 @@ function sendServo(angle){
     tx.writeValue(data);
 }
 
-/* ---------------- MOUTH ANIMATION ---------------- */
+/* ---------------- MOUTH ---------------- */
 
 function mouth(){
     return setInterval(()=>{
         sendServo(90);
         setTimeout(()=>sendServo(30), 80);
-    }, 160);
+    }, 150);
 }
 
-/* ---------------- DAVE BRAIN ---------------- */
-async function vraagAI(vraag){
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer JOUW_API_KEY_HIER"
-        },
-        body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: "Je bent LEGO Dave, een grappige robot." },
-                { role: "user", content: vraag }
-            ]
-        })
-    });
-
-    const data =
 /* ---------------- SPEAK ---------------- */
 
 function speak(text){
 
-    log("🤖 Dave: " + text, "bot");
+    log("🤖 Dave AI: " + text);
 
     let utter = new SpeechSynthesisUtterance(text);
     utter.lang = "nl-NL";
@@ -92,7 +72,37 @@ function speak(text){
     speechSynthesis.speak(utter);
 }
 
-/* ---------------- SPEECH ---------------- */
+/* ---------------- AI (OPENAI) ---------------- */
+
+async function askAI(question){
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer JOUW_API_KEY_HIER"
+        },
+        body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+                {
+                    role: "system",
+                    content: "Je bent Dave, een grappige LEGO robot. Je praat vrolijk en kort."
+                },
+                {
+                    role: "user",
+                    content: question
+                }
+            ]
+        })
+    });
+
+    const data = await response.json();
+
+    return data.choices[0].message.content;
+}
+
+/* ---------------- SPEECH RECOGNITION ---------------- */
 
 function listen(){
 
@@ -107,40 +117,20 @@ function listen(){
     rec.lang = "nl-NL";
     rec.start();
 
-    log("🎤 Dave luistert...", "bot");
+    log("🎤 Dave luistert...");
 
-    rec.onresult = (e)=>{
+    rec.onresult = async (e)=>{
 
         let text = e.results[0][0].transcript;
 
-        log("🧑 Jij: " + text, "user");
+        log("🧑 Jij: " + text);
 
-        let reply = await vraagAI(text);
+        let reply = await askAI(text);
 
         speak(reply);
     };
 
     rec.onerror = (e)=>{
-        log("❌ fout: " + e.error, "user");
+        log("❌ spraak fout: " + e.error);
     };
 }
-
-
-async function vraagAI(vraag){
-
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer JOUW_API_KEY_HIER"
-        },
-        body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: "Je bent LEGO Dave, een grappige robot." },
-                { role: "user", content: vraag }
-            ]
-        })
-    });
-
-    const data =
