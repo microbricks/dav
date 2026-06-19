@@ -1,7 +1,10 @@
 let tx;
 
-function log(t){
-    chat.innerHTML += t + "<br>";
+function log(text, type="bot"){
+    let div = document.createElement("div");
+    div.className = "msg " + type;
+    div.innerHTML = text;
+    chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
 }
 
@@ -27,10 +30,10 @@ async function connect(){
             "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
         );
 
-        log("✅ Verbonden met micro:bit!");
+        log("✅ Verbonden met micro:bit 🤖");
 
     }catch(e){
-        log("❌ Bluetooth fout: " + e);
+        log("❌ Bluetooth fout: " + e, "user");
     }
 }
 
@@ -38,9 +41,17 @@ async function connect(){
 
 function sendServo(angle){
     if(!tx) return;
-
     let data = new TextEncoder().encode(angle + "\n");
     tx.writeValue(data);
+}
+
+/* ---------------- MOUTH ANIMATION ---------------- */
+
+function mouth(){
+    return setInterval(()=>{
+        sendServo(90);
+        setTimeout(()=>sendServo(30), 80);
+    }, 160);
 }
 
 /* ---------------- DAVE BRAIN ---------------- */
@@ -54,36 +65,25 @@ function brain(text){
     }
 
     if(text.includes("grap")){
-        return "Waarom valt een robot nooit? Omdat hij altijd stabiel is 😂";
+        return "Waarom valt een robot nooit? Omdat hij altijd goed gebalanceerd is 😂";
     }
 
     if(text.includes("naam")){
-        return "Ik ben Dave, jouw LEGO robot!";
+        return "Ik ben Dave, jouw LEGO AI robot 🤖";
     }
 
-    return "Hmm 🤔 vertel me meer!";
-}
+    if(text.includes("hoe gaat")){
+        return "Alles werkt perfect in mijn servo-systeem 😎";
+    }
 
-/* ---------------- MOUTH ---------------- */
-
-function mouth(){
-
-    return setInterval(()=>{
-
-        sendServo(90);
-
-        setTimeout(()=>{
-            sendServo(30);
-        },90);
-
-    },180);
+    return "Hmm 🤔 dat vind ik interessant!";
 }
 
 /* ---------------- SPEAK ---------------- */
 
 function speak(text){
 
-    log("🤖 Dave: " + text);
+    log("🤖 Dave: " + text, "bot");
 
     let utter = new SpeechSynthesisUtterance(text);
     utter.lang = "nl-NL";
@@ -105,7 +105,7 @@ function listen(){
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if(!SR){
-        alert("Spraak niet ondersteund");
+        alert("Spraak niet ondersteund in deze browser");
         return;
     }
 
@@ -113,16 +113,20 @@ function listen(){
     rec.lang = "nl-NL";
     rec.start();
 
-    log("🎤 Luisteren...");
+    log("🎤 Dave luistert...", "bot");
 
     rec.onresult = (e)=>{
 
         let text = e.results[0][0].transcript;
 
-        log("🧑 Jij: " + text);
+        log("🧑 Jij: " + text, "user");
 
         let reply = brain(text);
 
         speak(reply);
+    };
+
+    rec.onerror = (e)=>{
+        log("❌ fout: " + e.error, "user");
     };
 }
