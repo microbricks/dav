@@ -134,3 +134,22 @@ function listen(){
         log("❌ spraak fout: " + e.error);
     };
 }
+
+async function sendText(){
+
+    let text = document.getElementById("inputText").value;
+
+    if(text.trim() === "") return;
+
+    log("🧑 Jij: " + text);
+
+    // Gebruik echte AI:
+    let reply = await askAI(text);
+
+    // Of als je geen AI gebruikt:
+    // let reply = brain(text);
+
+    speak(reply);
+
+    document.getElementById("inputText").value = "";
+}
