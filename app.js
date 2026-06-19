@@ -80,7 +80,7 @@ async function askAI(question){
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-           "Authorization: "Bearer sk-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
+           "Authorization: "Bearer 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
                "
         },
         body: JSON.stringify({
