@@ -115,7 +115,7 @@ function listen(){
 
         log("🧑 Jij: " + text, "user");
 
-        let reply = brain(text);
+        let reply = await vraagAI(text);
 
         speak(reply);
     };
