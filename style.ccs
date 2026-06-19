@@ -1,61 +1,28 @@
 body{
-    margin:0;
-    font-family:Arial;
-    background: radial-gradient(circle at top, #1b1b2f, #0a0a0a);
+    background:#0b0f19;
     color:white;
+    font-family:Arial;
     text-align:center;
 }
 
-.top{
-    padding:20px;
-}
-
-h1{
-    margin:0;
-    font-size:32px;
-    text-shadow:0 0 15px #00f0ff;
-}
-
-.sub{
-    opacity:0.6;
-    margin-top:5px;
-}
-
-.panel{
-    margin:10px;
-}
-
 button{
-    background:#00f0ff;
-    border:none;
-    padding:12px 16px;
+    padding:12px;
     margin:6px;
+    font-size:16px;
     border-radius:10px;
-    font-size:14px;
+    border:none;
+    background:#00e5ff;
     cursor:pointer;
-    box-shadow:0 0 10px #00f0ff;
-}
-
-button:hover{
-    transform:scale(1.05);
 }
 
 #chat{
     width:85%;
     height:300px;
-    margin:20px auto;
+    margin:auto;
     background:rgba(255,255,255,0.05);
-    border:1px solid rgba(0,240,255,0.3);
-    border-radius:12px;
+    border:1px solid #00e5ff;
     padding:10px;
     overflow:auto;
     text-align:left;
-    backdrop-filter: blur(6px);
+    border-radius:12px;
 }
-
-.msg{
-    margin:6px 0;
-}
-
-.user{ color:#ffffff; }
-.bot{ color:#00f0ff; }
