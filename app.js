@@ -124,3 +124,23 @@ function listen(){
         log("❌ fout: " + e.error, "user");
     };
 }
+
+
+async function vraagAI(vraag){
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer JOUW_API_KEY_HIER"
+        },
+        body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+                { role: "system", content: "Je bent LEGO Dave, een grappige robot." },
+                { role: "user", content: vraag }
+            ]
+        })
+    });
+
+    const data =
